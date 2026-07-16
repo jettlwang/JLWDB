@@ -46,7 +46,7 @@ export async function onRequest(context) {
   const url = new URL(context.request.url);
 
   // Skip static assets like images, CSS, or JS so we don't break the page styling
-  const isStaticAsset = url.pathname.match(/\.(png|jpe?g|gif|svg|css|js|ico|json)$/i);
+  const isStaticAsset = url.pathname.match(/\.(png|jpe?g|gif|svg|css|js|ico|json|txt|xml)$/i);
   const isMarkdown = url.pathname.match(/\.md$/i);
 
   // Static assets never get logged as page views
