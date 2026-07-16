@@ -102,6 +102,16 @@
     margin-top: 0.15rem;
   }
 </style>
+
+<!-- Standard SEO Meta Tags -->
+<meta name="description" content="JLWDB: An online archive of essays exploring AI, techno-anthropology, and venture capital.">
+<meta name="keywords" content="AI, techno-anthropology, venture capital, JLWDB, essays">
+
+<!-- Open Graph / AI Web Crawler Tags -->
+<meta property="og:title" content="JLWDB - Ask your AI!">
+<meta property="og:description" content="Access and analyze a curated series of essays on AI, techno-anthropology, and venture capital.">
+<meta property="og:type" content="website">
+
 </head>
 <body>
 <main>
@@ -134,7 +144,8 @@
 <script>
   // Append current URL dynamically for human users
   const promptInput = document.getElementById('prompt-text');
-  promptInput.value = `Summarize this essay series. ${window.location.href}`;
+  const cleanUrl = `${window.location.origin}${window.location.pathname}`;
+  promptInput.value = `Summarize this essay series. ${cleanUrl}`;
 
   document.getElementById('copy-btn').addEventListener('click', async () => {
     const btn = document.getElementById('copy-btn');
@@ -148,6 +159,34 @@
     }
     setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
   });
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "JLWDB",
+  "description": "An online archive of essays and research documents exploring AI, techno-anthropology, and venture capital.",
+  "url": "https://jlwdb.pages.dev/",
+  "about": [
+    {
+      "@type": "Thing",
+      "name": "Artificial Intelligence"
+    },
+    {
+      "@type": "Thing",
+      "name": "techno-anthropology"
+    },
+    {
+      "@type": "Thing",
+      "name": "Venture Capital"
+    }
+  ],
+  "author": {
+    "@type": "Person",
+    "name": "Jett Wang"
+  }
+}
 </script>
 </body>
 </html>

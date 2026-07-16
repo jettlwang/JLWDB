@@ -1,17 +1,32 @@
+// Best-effort "same person" ID: hash of IP + User-Agent, so repeat visits
+// from the same device/network collapse to the same id without cookies.
+async function deriveVisitorId(context) {
+  const ip = context.request.headers.get('CF-Connecting-IP') || '';
+  const ua = context.request.headers.get('User-Agent') || '';
+  const data = new TextEncoder().encode(`${ip}::${ua}`);
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  const hex = [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, '0')).join('');
+  return hex.substring(0, 10);
+}
+
 export async function onRequest(context) {
   const url = new URL(context.request.url);
-  
+
   // Skip static assets like images, CSS, or JS so we don't break the page styling
   const isStaticAsset = url.pathname.match(/\.(png|jpe?g|gif|svg|css|js|ico|json)$/i);
-  
+
   // If there is no version parameter AND it is not a static asset, redirect them with a unique ID
   if (!url.searchParams.has('v') && !isStaticAsset) {
-    // Generate a random 8-character alphanumeric ID
-    const sessionId = Math.random().toString(36).substring(2, 10);
+    const sessionId = await deriveVisitorId(context);
     url.searchParams.set('v', sessionId);
 
     // Redirect to the new URL carrying the session ID (302 temporary redirect)
     return Response.redirect(url.toString(), 302);
+  }
+
+  // Static assets never get a session param and shouldn't be logged as page views
+  if (isStaticAsset) {
+    return context.next();
   }
 
   // 2. Parse clean telemetry values
