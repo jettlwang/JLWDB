@@ -108,23 +108,33 @@
   <h1>Ask your AI!</h1>
 
   <div class="copy-box">
-    <input id="prompt-text" type="text" readonly>
+    <!-- Static fallback for prompt box -->
+    <input id="prompt-text" type="text" value="Summarize this essay series." readonly>
     <button id="copy-btn" type="button">Copy</button>
   </div>
 
   <h2>Essays</h2>
-  <ul class="tree" id="file-list"></ul>
+  <!-- Static HTML list that crawlers can read immediately -->
+  <ul class="tree" id="file-list">
+    <li>
+      <a href="2026-07-14-threelayersocial-zh.md">
+        从工业糖精到猴福子：三层社交回路决定纯线上AI社交情感赛道天花板
+        <span class="fname">2026-07-14-threelayersocial-zh.md</span>
+      </a>
+    </li>
+    <li>
+      <a href="2026-06-19-hearmonkeythesis-zh.md">
+        心猿整体论：红尘起舞，行在生活
+        <span class="fname">2026-06-19-hearmonkeythesis-zh.md</span>
+      </a>
+    </li>
+  </ul>
 </main>
 
 <script>
-  const files = [
-    { name: "2026-07-14-threelayersocial-zh.md", title: "从工业糖精到猴福子：三层社交回路决定纯线上AI社交情感赛道天花板" },
-    { name: "2026-06-19-hearmonkeythesis-zh.md", title: "心猿整体论：红尘起舞，行在生活" }
-  ];
-
-  const pageUrl = window.location.href;
+  // Append current URL dynamically for human users
   const promptInput = document.getElementById('prompt-text');
-  promptInput.value = `Summarize this essay series. ${pageUrl}`;
+  promptInput.value = `Summarize this essay series. ${window.location.href}`;
 
   document.getElementById('copy-btn').addEventListener('click', async () => {
     const btn = document.getElementById('copy-btn');
@@ -137,16 +147,6 @@
       btn.textContent = 'Copied!';
     }
     setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
-  });
-
-  const list = document.getElementById('file-list');
-  files.forEach(f => {
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    a.href = f.name;
-    a.innerHTML = `${f.title}<span class="fname">${f.name}</span>`;
-    li.appendChild(a);
-    list.appendChild(li);
   });
 </script>
 </body>
