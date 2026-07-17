@@ -47,7 +47,6 @@ export async function onRequest(context) {
 
   // Skip static assets like images, CSS, or JS so we don't break the page styling
   const isStaticAsset = url.pathname.match(/\.(png|jpe?g|gif|svg|css|js|ico|json|txt|xml)$/i);
-  const isMarkdown = url.pathname.match(/\.md$/i);
 
   // Static assets never get logged as page views
   if (isStaticAsset) {
@@ -58,21 +57,6 @@ export async function onRequest(context) {
   // so the URL a crawler or human sees never changes.
   const sessionId = await deriveVisitorId(context);
   logVisit(context, url, sessionId);
-
-  if (isMarkdown) {
-    const response = await context.next();
-    const headers = new Headers(response.headers);
-    headers.set('Content-Type', 'text/markdown; charset=utf-8');
-    headers.set('Access-Control-Allow-Origin', '*');
-    headers.set('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
-    headers.set('Access-Control-Allow-Headers', '*');
-
-    return new Response(response.body, {
-      status: response.status,
-      statusText: response.statusText,
-      headers
-    });
-  }
 
   return context.next();
 }
